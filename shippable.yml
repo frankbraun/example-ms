@@ -1,0 +1,11 @@
+language: go
+
+go:
+  - release
+
+before_install:
+  - export GOPATH=$SHIPPABLE_GOPATH
+
+goscript:
+  - go version
+  - go build -v
