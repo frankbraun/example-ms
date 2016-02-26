@@ -18,6 +18,9 @@ before_install:
   - mkdir -p $GOPATH/src/github.com/frankbraun
   - ln -sfn $PWD $GOPATH/src/github.com/frankbraun/example-ms
 
+install:
+  - shippable_retry go get -t -d -v ./... && go build -v ./...
+
 before_script:
   - mkdir -p shippable/testresults
   - mkdir -p shippable/codecoverage
