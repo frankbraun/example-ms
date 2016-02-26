@@ -15,6 +15,7 @@ before_install:
   - go get github.com/t-yuki/gocover-cobertura
   - go get github.com/onsi/gomega
   - go get github.com/onsi/ginkgo
+  - shippable_retry go get -d -v ./... && go build -v ./...
 
 # Make folders for the reports
 before_script:
