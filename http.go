@@ -13,7 +13,7 @@ func init() {
 	r := httprouter.New()
 
 	// routes
-	r.GET("/service/status", serviceStatus)
+	r.GET("/service/status", ServiceStatus)
 
 	http.Handle("/", r)
 }

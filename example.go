@@ -25,15 +25,14 @@ func generateJsonResponse(w http.ResponseWriter, payload []byte, status int) {
 
 }
 
+type serviceStatus struct {
+	Message string `json:"message"`
+	Uptime  string `json:"uptime"`
+}
+
 // API GET "/service/status"
 // Expect a 200 StatusOK HTTP Response
-func serviceStatus(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-
-	type serviceStatus struct {
-		Message string `json:"message"`
-		Uptime  string `json:"uptime"`
-	}
-
+func ServiceStatus(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// find duration for the upTime timestamp
 	the_duration := time.Since(time.Unix(upTime, 0))
 
