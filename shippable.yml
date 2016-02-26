@@ -1,27 +1,25 @@
-build_image: drydock/u14gol:prod
 language: go
 
 go:
   - 1.6
 
 env:
-  - CI_REPORT=shippable/testresults/junit.xml
+  global:
+    - GAE_DIR=/tmp/go_appengine
 
 before_install:
-  - export GOPATH=$SHIPPABLE_GOPATH
-  - source $HOME/.gvm/scripts/gvm
-  - gvm install go$SHIPPABLE_GO_VERSION
-  - gvm use go$SHIPPABLE_GO_VERSION
+  - >
+    test -e $GAE_DIR ||
+    (mkdir -p $GAE_DIR &&
+    wget https://storage.googleapis.com/appengine-sdks/featured/go_appengine_sdk_linux_amd64-1.9.6.zip -q -O /tmp/gae.zip &&
+    unzip /tmp/gae.zip -d /tmp)
+  - go get github.com/jstemmer/go-junit-report
   - go get github.com/t-yuki/gocover-cobertura
-  - go get github.com/onsi/gomega
-  - go get github.com/onsi/ginkgo
-  - shippable_retry go get -d -v ./... && go build -v ./...
-
-# Make folders for the reports
-before_script:
-  - mkdir -p shippable/testresults
-  - mkdir -p shippable/codecoverage
+  - mkdir -p $GOPATH/src/github.com/frankbraun
+  - ln -sfn $PWD $GOPATH/src/github.com/frankbraun/example-ms
 
 script:
-  - go test -coverprofile=coverage.txt -covermode count ./
-  - $GOPATH/bin/gocover-cobertura < coverage.txt > shippable/codecoverage/coverage.xml
+  - >
+    $GAE_DIR/goapp test -v -coverprofile=shippable/codecoverage/coverage.out github.com/frankbraun/example-ms |
+      $GOPATH/bin/go-junit-report > shippable/testresults/results.xml
+  - $GOPATH/bin/gocover-cobertura < shippable/codecoverage/coverage.out > shippable/codecoverage/coverage.xml
