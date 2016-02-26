@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - release
+  - 1.2
 
 before_install:
   - export GOPATH=$SHIPPABLE_GOPATH
